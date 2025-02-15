@@ -6,11 +6,11 @@ namespace EMedicalInventory.Data
 {
     public class AppDBContext : IdentityDbContext<Users>
     {
-        public AppDBContext(DbContextOptions options) : base(options)
+        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) // ✅ HARUS GENERIC
         {
-                
         }
+    }
 
 		
-	}
+	
 }

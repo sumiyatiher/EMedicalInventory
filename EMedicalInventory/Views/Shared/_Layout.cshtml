@@ -1,56 +1,70 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<Users> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<Users> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - EMedicalInventory</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/EMedicalInventory.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
+
+
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/Images/Logo.png" alt="Logo" style="height: 50px;" />
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                        }
-                        
-                        <partial name="_LoginPartial" />
-                    </ul>
-                </div>
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        
+        <a href="#" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i> <span>List Menu</span>
+        </a>
+        <a asp-page="/Index"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+        <a asp-controller="Obat" asp-action="Index"><i class="fa-solid fa-capsules"></i> <span>Manage Drugs</span></a>
+        <a asp-page="/Request"><i class="fa-solid fa-code-pull-request"></i> <span>Request Obat</span></a>
+        <a asp-page="/Products"><i class="fa-solid fa-user-check"></i> <span>Approval</span></a>
+        <a asp-page="/Logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+    </div>
+    <!-- Konten Utama -->
+    <div id="content" class="content">
+        <div class="topbar">
+            <span class="toggle-btn" onclick="toggleSidebar()">☰</span>
+            <div class="user-profile">
+                <span>@UserManager.GetUserName(User)</span>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        </div>
+
+        <main>
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - EMedicalInventory - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var content = document.getElementById("content");
+
+            sidebar.classList.toggle("closed");
+            content.classList.toggle("shift");
+        }
+
+        function toggleSubmenu(submenuId) {
+            var submenu = document.getElementById(submenuId);
+            if (submenu.style.display === "none") {
+                submenu.style.display = "block";  // Menampilkan submenu
+            } else {
+                submenu.style.display = "none";   // Menyembunyikan submenu
+            }
+        }
+    </script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

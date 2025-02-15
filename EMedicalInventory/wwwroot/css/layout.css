@@ -1,0 +1,83 @@
+﻿/* Styling sidebar */
+.sidebar {
+    height: 100vh;
+    width: 260px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #1DAB43;
+    color: white;
+    transition: 0.3s;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+    .sidebar a {
+        padding: 12px 20px;
+        display: block;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+        .sidebar a:hover {
+            background-color: #0E9B34;
+        }
+
+    /* Tambahkan class ini jika sidebar ditutup */
+    .sidebar.closed {
+        width: 80px;
+    }
+
+        .sidebar.closed a {
+            text-align: center;
+            padding: 12px 10px;
+        }
+
+            .sidebar.closed a span {
+                display: none; /* Sembunyikan teks saat sidebar kecil */
+            }
+
+.content {
+    margin-left: 260px;
+    transition: margin-left 0.3s;
+    padding: 20px;
+}
+
+    .content.shift {
+        margin-left: 80px;
+    }
+
+.toggle-btn {
+    font-size: 24px;
+    cursor: pointer;
+    color: #0E9B34;
+    padding: 10px;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-box {
+    flex-grow: 1;
+    margin: 0 20px;
+}
+
+    .search-box input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+.user-profile img {
+    width: 40px;
+    border-radius: 50%;
+}
