@@ -1,26 +1,26 @@
-﻿using EMedicalInventory.Data;
-using EMedicalInventory.Models;
+﻿using EMedicalInventory.Models;
+using EMedicalInventory.Repo.ObatRepos;
 using EMedicalInventory.ViewModels.Obat;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace EMedicalInventory.Controllers
 {
     public class ObatController : Controller
     {
-        private readonly MedicalInventoryDBContext _dbContext;
         private readonly UserManager<Users> _userManager;
+        private readonly IObatRepo _obatRepo;
 
-        public ObatController(MedicalInventoryDBContext context, UserManager<Users> userManager)
+        public ObatController( UserManager<Users> userManager,IObatRepo obatRepo)
         {
-            _dbContext = context;
             _userManager = userManager;
+            _obatRepo = obatRepo;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var obatList = _dbContext.Obat.ToList();
+            var obatList = await _obatRepo.GetAllDataAsync();
             return View(obatList);
         }
 
@@ -31,44 +31,33 @@ namespace EMedicalInventory.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(ObatViewModel model)
+        public async Task<IActionResult> Create(ObatViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Simpan data jika valid
-                var userId = _userManager.GetUserId(User);
-
-                var obat = new Obat
+                try
                 {
-                    DrugName = model.DrugName,
-                    Stock = model.Stock,
-                    Price = model.Price,
-                    ExpiredDate = model.ExpiredDate,
-                    CreatedBy = userId,
-                    CreatedDate = DateTime.Now,
-                    UpdatedBy = userId,
-                    UpdatedDate = DateTime.Now
+                    var userId = _userManager.GetUserId(User);
 
-                };
+                    await _obatRepo.AddObatAsync(model, userId);
 
-                _dbContext.Obat.Add(obat);
-                _dbContext.SaveChanges();
-
-                var VMObat = new ObatViewModel
+                    return RedirectToAction("Index", "Obat");
+                }
+                catch (Exception ex)
                 {
-                    Id = obat.Id,
-                    DrugName = obat.DrugName,
-                    Stock = obat.Stock,
-                    Price = obat.Price,
-                    ExpiredDate = obat.ExpiredDate
-                };
-                return RedirectToAction("Index", "Obat");
+                    ModelState.AddModelError("", $"Terjadi kesalahan saat menyimpan data: {ex.Message}");
 
-                
-
+                    return View(model);
+                }
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult EditDrug()
+        {
+            return View();
         }
     }
 }

@@ -10,7 +10,7 @@
         <h4 class="mb-0">Manage Drugs</h4>
     </div>
     <div class="card-body">
-        <a class="btn btn-primary mb-3" asp-controller="Obat" asp-action="AddDrug">+ Add New Drug</a>
+        <a class="btn btn-success mb-3" asp-controller="Obat" asp-action="AddDrug">+ Add New Drug</a>
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
@@ -30,7 +30,7 @@
                         <td>@obat.Price</td>
                         <td>@obat.ExpiredDate</td>
                         <td>
-                            <a asp-route-id="@obat.Id" class="btn btn-warning btn-sm text-white">Edit</a>
+                            <a asp-route-id="@obat.Id" class="btn btn-primary btn-sm text-white">Edit</a>
                             <a asp-route-id="@obat.Id" class="btn btn-danger btn-sm text-white">Hapus</a>
                         </td>
                     </tr>

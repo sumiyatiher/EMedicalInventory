@@ -2,11 +2,20 @@ using EMedicalInventory.Data;
 using EMedicalInventory.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using EMedicalInventory.Mapper;
+using EMedicalInventory.Repo.ObatRepos;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Add Auto Mapper
+builder.Services.AddAutoMapper(typeof(EMedicalInventoryMapper));
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Add Repo
+builder.Services.AddScoped<IObatRepo, ObatRepo>();
 
 //Add DB Context
 builder.Services.AddDbContext<AppDBContext>(options => 
