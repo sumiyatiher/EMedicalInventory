@@ -1,5 +1,5 @@
-﻿@using EMedicalInventory.Models;
-@model IEnumerable<Obat>;
+﻿@using EMedicalInventory.ViewModels.Obat;
+@model ObatListViewModel;
 
 @{
     ViewData["Title"] = "Manage Drugs";
@@ -22,9 +22,10 @@
         }
 
         <a class="btn btn-success mb-3" asp-controller="Obat" asp-action="AddDrug">+ Add New Drug</a>
+        <!-- Filter Pencarian -->
         <form method="get" class="mb-3">
             <div class="input-group">
-                <input type="text" name="searchTerm" class="form-control" placeholder="Search drug...">
+                <input type="text" name="searchTerm" class="form-control" placeholder="Search drugs..." value="@Model.SearchTerm">
                 <button type="submit" class="btn btn-primary">Search</button>
                 <a href="@Url.Action("Index")" class="btn btn-secondary">Reset</a>
             </div>
@@ -32,15 +33,31 @@
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>Drug Name</th>
-                    <th>Stock</th>
-                    <th>Price</th>
-                    <th>Expired Date</th>
+                    <th>
+                        <a asp-action="Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-sortColumn="DrugName" asp-route-sortOrder="@(Model.SortColumn == "DrugName" && Model.SortOrder == "asc" ? "desc" : "asc")">
+                            Drug Name @(Model.SortColumn == "DrugName" ? (Model.SortOrder == "asc" ? "▲" : "▼") : "")
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-sortColumn="Stock" asp-route-sortOrder="@(Model.SortColumn == "Stock" && Model.SortOrder == "asc" ? "desc" : "asc")">
+                            Stock @(Model.SortColumn == "Stock" ? (Model.SortOrder == "asc" ? "▲" : "▼") : "")
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-sortColumn="Price" asp-route-sortOrder="@(Model.SortColumn == "Price" && Model.SortOrder == "asc" ? "desc" : "asc")">
+                            Price @(Model.SortColumn == "Price" ? (Model.SortOrder == "asc" ? "▲" : "▼") : "")
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-searchTerm="@Model.SearchTerm" asp-route-sortColumn="ExpiredDate" asp-route-sortOrder="@(Model.SortColumn == "ExpiredDate" && Model.SortOrder == "asc" ? "desc" : "asc")">
+                            Expired Date @(Model.SortColumn == "ExpiredDate" ? (Model.SortOrder == "asc" ? "▲" : "▼") : "")
+                        </a>
+                    </th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obat in Model)
+                @foreach (var obat in Model.Obats)
                 {
                     <tr>
                         <td>@obat.DrugName</td>
@@ -57,16 +74,36 @@
         </table>
 
         <!-- Pagination -->
-        @* <nav>
-            <ul class="pagination">
+        <nav>
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-searchTerm="@Model.SearchTerm"
+                           asp-route-sortColumn="@Model.SortColumn" asp-route-sortOrder="@Model.SortOrder"
+                           asp-route-page="@(Model.CurrentPage - 1)" asp-route-pageSize="5">Previous</a>
+                    </li>
+                }
+
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
                     <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-page="./Index" asp-route-pageNumber="@i">@i</a>
+                        <a class="page-link" asp-action="Index" asp-route-searchTerm="@Model.SearchTerm"
+                           asp-route-sortColumn="@Model.SortColumn" asp-route-sortOrder="@Model.SortOrder"
+                           asp-route-page="@i" asp-route-pageSize="5">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-searchTerm="@Model.SearchTerm"
+                           asp-route-sortColumn="@Model.SortColumn" asp-route-sortOrder="@Model.SortOrder"
+                           asp-route-page="@(Model.CurrentPage + 1)" asp-route-pageSize="5">Next</a>
                     </li>
                 }
             </ul>
-        </nav> *@
+        </nav>
     </div>
 </div>
 <!-- Modal Konfirmasi Hapus -->

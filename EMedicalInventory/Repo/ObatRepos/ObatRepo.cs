@@ -49,13 +49,54 @@ namespace EMedicalInventory.Repo.ObatRepos
             }
         }
 
-        public Task<List<Obat>> GetAllDataAsync()
+        public async Task<ObatListViewModel> GetAllDataAsync(string searchTerm, string sortColumn, string sortOrder, int page, int pageSize)
         {
-            var obatList = _dbContext.Obat.ToListAsync();
-            return obatList;
+            var query = _dbContext.Obat.AsQueryable();
+
+            //Filtering
+            if (!String.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(o => o.DrugName.Contains(searchTerm));
+            }
+
+            //Sorting
+            sortColumn = string.IsNullOrEmpty(sortColumn) ? "DrugName" : sortColumn;
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "asc" : sortOrder;
+
+            query = sortColumn switch
+            {
+                "Stock" => sortOrder == "asc" ? query.OrderBy(o => o.Stock) : query.OrderByDescending(o => o.Stock),
+                "Price" => sortOrder == "asc" ? query.OrderBy(o => o.Price) : query.OrderByDescending(o => o.Price),
+                "ExpiredDate" => sortOrder == "asc" ? query.OrderBy(o => o.ExpiredDate) : query.OrderByDescending(o => o.ExpiredDate),
+                _ => sortOrder == "asc" ? query.OrderBy(o => o.DrugName) : query.OrderByDescending(o => o.DrugName),
+            };
+
+            //Pagination
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var obats = query.Skip((page - 1) * pageSize).Take(pageSize)
+                .Select(o => new ObatViewModel
+                {
+                    Id = o.Id,
+                    DrugName = o.DrugName,
+                    Stock = o.Stock,
+                    Price = o.Price,
+                    ExpiredDate = o.ExpiredDate
+                }).ToList();
+
+            return new ObatListViewModel
+            {
+                Obats = obats,
+                SearchTerm = searchTerm,
+                SortColumn = sortColumn,
+                SortOrder = sortOrder,
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
         }
 
-        
+
 
         public async Task UpdateAsync(ObatViewModel model,string userid)
         {

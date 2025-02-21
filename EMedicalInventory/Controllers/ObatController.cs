@@ -18,10 +18,11 @@ namespace EMedicalInventory.Controllers
             _obatRepo = obatRepo;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm,string sortColumn, string sortOrder, int page = 1, int pageSize = 5)
         {
-            var obatList = await _obatRepo.GetAllDataAsync();
-            return View(obatList);
+
+            var model = await _obatRepo.GetAllDataAsync(searchTerm, sortColumn, sortOrder, page, pageSize); // ✅ Gunakan await
+            return View(model);
         }
 
         [HttpGet]
