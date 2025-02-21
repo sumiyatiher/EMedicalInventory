@@ -7,8 +7,8 @@ namespace EMedicalInventory.Repo.ObatRepos
     {
         Task<List<Obat>> GetAllDataAsync();
         Task AddObatAsync(ObatViewModel model,string userid);
-        Task<Obat> GetByIdAsync(int id);
-        Task UpdateAsync(ObatViewModel model);
+        Task<ObatViewModel> GetByIdAsync(int id);
+        Task UpdateAsync(ObatViewModel model,string userid);
         Task DeleteAsync(int id);
     }
 }

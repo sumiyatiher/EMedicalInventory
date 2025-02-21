@@ -12,7 +12,7 @@ namespace EMedicalInventory.Controllers
         private readonly UserManager<Users> _userManager;
         private readonly IObatRepo _obatRepo;
 
-        public ObatController( UserManager<Users> userManager,IObatRepo obatRepo)
+        public ObatController(UserManager<Users> userManager, IObatRepo obatRepo)
         {
             _userManager = userManager;
             _obatRepo = obatRepo;
@@ -41,11 +41,13 @@ namespace EMedicalInventory.Controllers
 
                     await _obatRepo.AddObatAsync(model, userId);
 
+                    TempData["SuccessMessage"] = "Drug Added successfully!";
+
                     return RedirectToAction("Index", "Obat");
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", $"Terjadi kesalahan saat menyimpan data: {ex.Message}");
+                    TempData["ErrorMessage"] = "An error occurred while Adding the drug.";
 
                     return View(model);
                 }
@@ -55,9 +57,57 @@ namespace EMedicalInventory.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditDrug()
+        public async Task<IActionResult> EditDrug(int id)
         {
-            return View();
+            var obat = await _obatRepo.GetByIdAsync(id);
+            if (obat == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(obat);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateObat(ObatViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                await _obatRepo.UpdateAsync(model, userId);
+
+                TempData["SuccessMessage"] = "Drug updated successfully!";
+
+            }
+            catch(Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while updating the drug.";
+            }
+
+            return RedirectToAction("Index", "Obat");
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteDrug(int id)
+        {
+            try
+            {
+                await _obatRepo.DeleteAsync(id);
+                TempData["SuccessMessage"] = "Drug deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the drug.";
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

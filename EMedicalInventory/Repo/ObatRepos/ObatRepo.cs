@@ -2,6 +2,7 @@
 using EMedicalInventory.Data;
 using EMedicalInventory.Models;
 using EMedicalInventory.ViewModels.Obat;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace EMedicalInventory.Repo.ObatRepos
@@ -34,9 +35,18 @@ namespace EMedicalInventory.Repo.ObatRepos
 
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var obat = await _dbContext.Obat.FirstOrDefaultAsync(o => o.Id == id);
+            if(obat != null)
+            {
+                _dbContext.Remove(obat);
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Drug Not Found!");
+            }
         }
 
         public Task<List<Obat>> GetAllDataAsync()
@@ -47,14 +57,32 @@ namespace EMedicalInventory.Repo.ObatRepos
 
         
 
-        public Task UpdateAsync(ObatViewModel model)
+        public async Task UpdateAsync(ObatViewModel model,string userid)
         {
-            throw new NotImplementedException();
+            var obatExist = await _dbContext.Obat.FirstOrDefaultAsync(o => o.Id == model.Id);
+            if (obatExist != null) 
+            {
+                // Update properties
+                obatExist.DrugName = model.DrugName;
+                obatExist.Stock = model.Stock;
+                obatExist.Price = model.Price;
+                obatExist.ExpiredDate = model.ExpiredDate;
+                obatExist.UpdatedBy = userid;
+                obatExist.UpdatedDate = DateTime.Now;
+
+                _dbContext.Obat.Update(obatExist);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
-        Task<Obat> GetByIdAsync(int id)
+        public async Task<ObatViewModel> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var obat = await _dbContext.Obat.FirstOrDefaultAsync(o => o.Id == id);
+            if (obat != null)
+            {
+               return _mapper.Map<ObatViewModel>(obat);
+            }
+            return null;
         }
     }
 }

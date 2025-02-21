@@ -17,6 +17,6 @@ namespace EMedicalInventory.ViewModels.Obat
         public decimal Price { get; set; }
         [Required(ErrorMessage = "Expired Date is required!")]
         public DateTime ExpiredDate { get; set; }
-        
+
     }
 }
