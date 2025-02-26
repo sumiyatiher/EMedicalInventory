@@ -8,5 +8,6 @@ namespace EMedicalInventory.Data
         public MedicalInventoryDBContext(DbContextOptions<MedicalInventoryDBContext> options) : base(options) { }
 
         public DbSet<Obat> Obat { get; set; }
+        public DbSet<RequestObat> RequestObat { get; set; }
     }
 }

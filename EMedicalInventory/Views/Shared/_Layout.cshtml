@@ -1,6 +1,13 @@
 ﻿@inject Microsoft.AspNetCore.Identity.SignInManager<Users> SignInManager
 @inject Microsoft.AspNetCore.Identity.UserManager<Users> UserManager
 
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +29,22 @@
             <i class="fas fa-bars"></i> <span><b>EMedInventory</b></span>
         </a>
         <a asp-page="/Index"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
-        <a asp-controller="Obat" asp-action="Index"><i class="fa-solid fa-capsules"></i> <span>Manage Drugs</span></a>
-        <a asp-page="/Request"><i class="fa-solid fa-code-pull-request"></i> <span>Request Obat</span></a>
-        <a asp-page="/Products"><i class="fa-solid fa-user-check"></i> <span>Approval</span></a>
+
+        @if (roles.Any(r => r.ToUpper() == "ADMIN"))
+        {
+            <a asp-controller="Obat" asp-action="Index"><i class="fa-solid fa-capsules"></i> <span>Manage Drugs</span></a>
+        }
+
+        @if (roles.Any(r => r.ToUpper() == "USER EKSTERNAL"))
+        {
+            <a asp-action="Index" asp-controller="Request"><i class="fa-solid fa-code-pull-request"></i> <span>Request Obat</span></a>
+        }
+
+        @if (roles.Any(r => r.ToUpper() == "ADMIN") || roles.Any(r => r.ToUpper() == "USER DISTRIBUTION"))
+        {
+            <a asp-page="/Products"><i class="fa-solid fa-user-check"></i> <span>Approval</span></a>
+        }
+        
         <a asp-page="/Logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
     </div>
     <!-- Konten Utama -->

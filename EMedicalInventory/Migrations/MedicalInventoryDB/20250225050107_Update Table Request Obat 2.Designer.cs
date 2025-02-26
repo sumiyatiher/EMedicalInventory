@@ -4,6 +4,7 @@ using EMedicalInventory.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMedicalInventory.Migrations.MedicalInventoryDB
 {
     [DbContext(typeof(MedicalInventoryDBContext))]
-    partial class MedicalInventoryDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250225050107_Update Table Request Obat 2")]
+    partial class UpdateTableRequestObat2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

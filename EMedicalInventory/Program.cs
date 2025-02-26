@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using EMedicalInventory.Mapper;
 using EMedicalInventory.Repo.ObatRepos;
+using EMedicalInventory.Repo.RequestRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddControllersWithViews();
 
 //Add Repo
 builder.Services.AddScoped<IObatRepo, ObatRepo>();
+builder.Services.AddScoped<IRequestRepo, RequestRepo>();
 
 //Add DB Context
 builder.Services.AddDbContext<AppDBContext>(options => 

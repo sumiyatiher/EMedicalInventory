@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EMedicalInventory.Models;
 using EMedicalInventory.ViewModels.Obat;
+using EMedicalInventory.ViewModels.Request;
 
 namespace EMedicalInventory.Mapper
 {
@@ -8,6 +9,7 @@ namespace EMedicalInventory.Mapper
     {
         public EMedicalInventoryMapper() {
             CreateMap<Obat, ObatViewModel>().ReverseMap();
+            CreateMap<RequestObat,RequestObatViewModel>().ReverseMap();
         }
        
     }
